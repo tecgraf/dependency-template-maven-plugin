@@ -8,6 +8,8 @@ The generated content can be stored in a file or a system property.
 
 Two templates are used during the process: main and artifact templates.
 
+The plugin is configured to run by default in the `compile` maven phase.
+
 ## Main template
 
 Receives the formatted list of dependencies.
@@ -54,8 +56,99 @@ Default value:
 | excludeClassifiers | Comma separated list of classifiers to exclude. Empty String indicates don't exclude anything. | |
 | excludeTypes | Comma separated list of types to exclude. Empty String indicates don't exclude anything. | |
 
-## Example
+## Example 1
 
+pom.xml:
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-numbers-angle</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>br.puc-rio.tecgraf</groupId>
+                <artifactId>dependency-template-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>dependency-template</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>target/output.txt</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+generated file:
+
+```
+org.apache.commons:commons-numbers-angle-1.1.jar
+org.apache.commons:commons-numbers-core-1.1.jar
+```
+
+## Example 2
+
+artifact template file:
+
+```
+{{artifactId}}-{{version}}
+```
+
+main template file:
+
+```
+These are the project dependencies: {{artifacts}}
+```
+
+pom.xml:
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-numbers-angle</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>br.puc-rio.tecgraf</groupId>
+                <artifactId>dependency-template-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>dependency-template</goal>
+                        </goals>
+                        <configuration>
+                            <mainTemplateFile>src/main/resources/templates/mainTemplate.txt</mainTemplateFile>
+                            <artifactTemplateFile>src/main/resources/templates/artifactTemplate.txt</artifactTemplateFile>
+                            <separator>,</separator>
+                            <outputFile>target/output.txt</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+generated file:
+
+```
+These are the project dependencies: commons-numbers-angle-1.1,commons-numbers-core-1.1
+```
 
 
 
