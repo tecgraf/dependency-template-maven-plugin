@@ -8,7 +8,7 @@ The generated content can be stored in a file or a system property.
 
 Two templates are used during the process: main and artifact templates.
 
-The plugin is configured to run by default in the `compile` maven phase.
+The plugin is configured to run by default in the `compile` Maven phase.
 
 ## Main template
 
@@ -97,6 +97,46 @@ org.apache.commons:commons-numbers-core-1.1.jar
 ```
 
 ## Example 2
+
+pom.xml:
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-numbers-angle</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>br.puc-rio.tecgraf</groupId>
+                <artifactId>dependency-template-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>dependency-template</goal>
+                        </goals>
+                        <configuration>
+                            <excludeTransitive>true</excludeTransitive>
+                            <outputFile>target/output.txt</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+generated file:
+
+```
+org.apache.commons:commons-numbers-angle-1.1.jar
+```
+
+## Example 3
 
 artifact template file:
 
