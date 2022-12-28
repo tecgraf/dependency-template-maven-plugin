@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>br.puc-rio.tecgraf</groupId>
+    <artifactId>dependency-template-maven-plugin-example</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-numbers-angle</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>br.puc-rio.tecgraf</groupId>
+                <artifactId>dependency-template-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>dependency-template</goal>
+                        </goals>
+                        <configuration>
+                            <mainTemplateFile>src/main/resources/templates/mainTemplate.txt</mainTemplateFile>
+                            <artifactTemplateFile>src/main/resources/templates/artifactTemplate.txt</artifactTemplateFile>
+                            <separator>,</separator>
+                            <outputFile>target/output.txt</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
