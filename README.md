@@ -73,7 +73,7 @@ pom.xml:
             <plugin>
                 <groupId>br.puc-rio.tecgraf</groupId>
                 <artifactId>dependency-template-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -113,7 +113,7 @@ pom.xml:
             <plugin>
                 <groupId>br.puc-rio.tecgraf</groupId>
                 <artifactId>dependency-template-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -165,7 +165,7 @@ pom.xml:
             <plugin>
                 <groupId>br.puc-rio.tecgraf</groupId>
                 <artifactId>dependency-template-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <executions>
                     <execution>
                         <goals>
