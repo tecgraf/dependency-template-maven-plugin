@@ -19,8 +19,10 @@ import org.apache.maven.project.MavenProject;
  * Two templates are used during the process: main and artifact templates.
  * The main template receives the formatted list of dependencies.
  * The artifact template is used to format each dependency from the list.
+ * <p>
+ * The plugin is configured to run by default in the "compile" maven phase.
  */
-@Mojo(name = "dependency-template", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(name = "dependency-template", defaultPhase = LifecyclePhase.COMPILE, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class DependencyTemplateMojo extends AbstractMojo {
 
   protected static final String DEFAULT_ARTIFACT_TEMPLATE =
@@ -124,6 +126,8 @@ public class DependencyTemplateMojo extends AbstractMojo {
         artifacts.add(artifact);
       }
 
+      getLog().info("Artifact list size: " + artifacts.size());
+
       Collections.sort(artifacts);
 
       final StringJoiner dependencyJoiner = new StringJoiner(separator);
@@ -142,11 +146,13 @@ public class DependencyTemplateMojo extends AbstractMojo {
       mainTemplate = mainTemplate.replace("{{artifacts}}", dependencyJoiner.toString());
       if (this.outputProperty != null) {
         System.setProperty(this.outputProperty, mainTemplate);
+        getLog().info("Updated system property: " + this.outputProperty);
       }
       if (this.outputFile != null) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.outputFile))) {
           writer.write(mainTemplate);
         }
+        getLog().info("Generated file: " + this.outputFile);
       }
     }
     catch (Exception e) {
