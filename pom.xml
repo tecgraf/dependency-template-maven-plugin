@@ -7,8 +7,8 @@
     <packaging>maven-plugin</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Maven plugin to get the list of project dependencies and apply it to a template. The result can be
-        stored in a file or a system property.
+    <description>Maven plugin to get the list of project dependencies and apply it to templates. The generated content
+        can be stored in a file or a system property.
     </description>
     <url>https://github.com/tecgraf/dependency-template-maven-plugin</url>
 

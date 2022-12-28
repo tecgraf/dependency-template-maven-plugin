@@ -12,57 +12,83 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
+/**
+ * Maven plugin to get the list of project dependencies and apply it to templates.
+ * The generated content can be stored in a file or a system property.
+ * <p>
+ * Two templates are used during the process: main and artifact templates.
+ * The main template receives the formatted list of dependencies.
+ * The artifact template is used to format each dependency from the list.
+ */
 @Mojo(name = "dependency-template", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class DependencyTemplateMojo extends AbstractMojo {
 
-  protected static final String DEFAULT_TEMPLATE =
+  protected static final String DEFAULT_ARTIFACT_TEMPLATE =
     "{{groupId}}:{{artifactId}}-{{version}}{{ifClassifier:-}}{{classifier}}.{{type}}";
 
   @Parameter(defaultValue = "${project}", readonly = true) protected MavenProject mavenProject;
 
-  @Parameter protected String templateFile;
-
-  @Parameter protected String dependencyTemplateFile;
+  /**
+   * Location of the file to override the main template's default value.
+   */
+  @Parameter protected String mainTemplateFile;
 
   /**
-   * If we should exclude transitive dependencies
+   * Location of the file to override the artifact template's default value.
+   */
+  @Parameter protected String artifactTemplateFile;
+
+  /**
+   * Whether to exclude transitive dependencies.
    */
   @Parameter(defaultValue = "false") protected Boolean excludeTransitive;
 
   /**
-   * Comma separated list of GroupId Names to exclude.
+   * Comma separated list of groupId Names to exclude. Empty String indicates don't exclude anything.
    */
   @Parameter protected List<String> excludeGroupIds;
 
   /**
-   * Comma separated list of Artifact names to exclude.
+   * Comma separated list of artifact names to exclude. Empty String indicates don't exclude anything.
    */
   @Parameter protected List<String> excludeArtifactIds;
 
   /**
-   * Comma Separated list of Classifiers to exclude. Empty String indicates don't exclude anything (default).
+   * Comma separated list of classifiers to exclude. Empty String indicates don't exclude anything.
    */
   @Parameter protected List<String> excludeClassifiers;
 
   /**
-   * Comma Separated list of Types to exclude. Empty String indicates don't exclude anything (default).
+   * Comma separated list of types to exclude. Empty String indicates don't exclude anything.
    */
   @Parameter protected List<String> excludeTypes;
 
+  /**
+   * Output file to store the generated content.
+   */
   @Parameter protected String outputFile;
 
+  /**
+   * System property to store the generated content.
+   */
   @Parameter protected String outputProperty;
 
+  /**
+   * Chartset used to read the template files.
+   */
   @Parameter(defaultValue = "UTF-8") protected String charset;
 
+  /**
+   * Separator used between artifacts.
+   */
   @Parameter(defaultValue = "\n") protected String separator;
 
   @Override public void execute() throws MojoExecutionException {
     try {
-      String dependencyTemplate = DependencyTemplateMojo.DEFAULT_TEMPLATE;
-      if (this.dependencyTemplateFile != null) {
-        final byte[] bytes = Files.readAllBytes(Paths.get(this.dependencyTemplateFile));
-        dependencyTemplate = new String(bytes, this.charset);
+      String artifactTemplate = DependencyTemplateMojo.DEFAULT_ARTIFACT_TEMPLATE;
+      if (this.artifactTemplateFile != null) {
+        final byte[] bytes = Files.readAllBytes(Paths.get(this.artifactTemplateFile));
+        artifactTemplate = new String(bytes, this.charset);
       }
 
       Set<?> unfilteredArtifacts;
@@ -103,23 +129,23 @@ public class DependencyTemplateMojo extends AbstractMojo {
       final StringJoiner dependencyJoiner = new StringJoiner(separator);
 
       for (Artifact artifact : artifacts) {
-        String dependencyAsString = applyTemplate(artifact, dependencyTemplate);
+        String dependencyAsString = applyArtifactTemplate(artifact, artifactTemplate);
         dependencyJoiner.add(dependencyAsString);
       }
 
-      String template = "{{dependencies}}";
-      if (this.templateFile != null) {
-        final byte[] bytes = Files.readAllBytes(Paths.get(this.templateFile));
-        template = new String(bytes, this.charset);
+      String mainTemplate = "{{artifacts}}";
+      if (this.mainTemplateFile != null) {
+        final byte[] bytes = Files.readAllBytes(Paths.get(this.mainTemplateFile));
+        mainTemplate = new String(bytes, this.charset);
       }
 
-      template = template.replace("{{dependencies}}", dependencyJoiner.toString());
+      mainTemplate = mainTemplate.replace("{{artifacts}}", dependencyJoiner.toString());
       if (this.outputProperty != null) {
-        System.setProperty(this.outputProperty, template);
+        System.setProperty(this.outputProperty, mainTemplate);
       }
       if (this.outputFile != null) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.outputFile))) {
-          writer.write(template);
+          writer.write(mainTemplate);
         }
       }
     }
@@ -129,8 +155,8 @@ public class DependencyTemplateMojo extends AbstractMojo {
     }
   }
 
-  private String applyTemplate(Artifact artifact, String dependencyTemplate) {
-    String str = dependencyTemplate;
+  private String applyArtifactTemplate(Artifact artifact, String template) {
+    String str = template;
 
     str = str.replace("{{groupId}}", artifact.getGroupId());
     str = str.replace("{{artifactId}}", artifact.getArtifactId());
