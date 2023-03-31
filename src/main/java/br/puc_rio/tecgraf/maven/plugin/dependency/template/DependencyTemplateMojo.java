@@ -3,10 +3,12 @@ package br.puc_rio.tecgraf.maven.plugin.dependency.template;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
@@ -106,6 +108,7 @@ public class DependencyTemplateMojo extends AbstractMojo {
       final Set<String> excludeClassifiers = toSet(this.excludeClassifiers);
       final Set<String> excludeTypes = toSet(this.excludeTypes);
 
+
       List<Artifact> artifacts = new ArrayList<>();
       for (Object obj : unfilteredArtifacts) {
         Artifact artifact = (Artifact) obj;
@@ -149,6 +152,7 @@ public class DependencyTemplateMojo extends AbstractMojo {
         getLog().info("Updated system property: " + this.outputProperty);
       }
       if (this.outputFile != null) {
+        Files.createDirectories(Paths.get(this.outputFile).getParent());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.outputFile))) {
           writer.write(mainTemplate);
         }
