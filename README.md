@@ -43,18 +43,19 @@ Default value:
 ## Parameters
 
 | Parameter | Description | Default value |
-| --- | --- | --- |
-| mainTemplateFile | Location of the file to override the main template's default value. |  |
-| artifactTemplateFile | Location of the file to override the artifact template's default value. | |
-| separator | Separator used between artifacts. | \n |
-| outputFile | Output file to store the generated content. | |
-| outputProperty | System property to store the generated content. | |
-| charset | Chartset used to read the template files. | UTF-8 |
-| excludeTransitive | Whether to exclude transitive dependencies. | false |
-| excludeGroupIds | Comma separated list of groupId Names to exclude. Empty String indicates don't exclude anything. | |
-| excludeArtifactIds | Comma separated list of artifact names to exclude. Empty String indicates don't exclude anything. | |
-| excludeClassifiers | Comma separated list of classifiers to exclude. Empty String indicates don't exclude anything. | |
-| excludeTypes | Comma separated list of types to exclude. Empty String indicates don't exclude anything. | |
+| --- | --- |---------------|
+| mainTemplateFile | Location of the file to override the main template's default value. |               |
+| artifactTemplateFile | Location of the file to override the artifact template's default value. |               |
+| separator | Separator used between artifacts. | |
+| lineBreak | Whether to add line break between artifacts. | true          |
+| outputFile | Output file to store the generated content. |               |
+| outputProperty | System property to store the generated content. |               |
+| charset | Chartset used to read the template files. | UTF-8         |
+| excludeTransitive | Whether to exclude transitive dependencies. | false         |
+| excludeGroupIds | Comma separated list of groupId Names to exclude. Empty String indicates don't exclude anything. |               |
+| excludeArtifactIds | Comma separated list of artifact names to exclude. Empty String indicates don't exclude anything. |               |
+| excludeClassifiers | Comma separated list of classifiers to exclude. Empty String indicates don't exclude anything. |               |
+| excludeTypes | Comma separated list of types to exclude. Empty String indicates don't exclude anything. |               |
 
 ## Example 1
 
@@ -175,6 +176,7 @@ pom.xml:
                             <mainTemplateFile>src/main/resources/templates/mainTemplate.txt</mainTemplateFile>
                             <artifactTemplateFile>src/main/resources/templates/artifactTemplate.txt</artifactTemplateFile>
                             <separator>,</separator>
+                            <lineBreak>false</lineBreak>
                             <outputFile>target/output.txt</outputFile>
                         </configuration>
                     </execution>

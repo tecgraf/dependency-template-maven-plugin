@@ -85,7 +85,12 @@ public class DependencyTemplateMojo extends AbstractMojo {
   /**
    * Separator used between artifacts.
    */
-  @Parameter(defaultValue = "\n") protected String separator;
+  @Parameter() protected String separator;
+
+  /**
+   * Whether to add line break between artifacts.
+   */
+  @Parameter(defaultValue = "true") protected Boolean lineBreak;
 
   @Override public void execute() throws MojoExecutionException {
     try {
@@ -133,7 +138,15 @@ public class DependencyTemplateMojo extends AbstractMojo {
 
       Collections.sort(artifacts);
 
-      final StringJoiner dependencyJoiner = new StringJoiner(separator);
+      String finalSeparator = "";
+      if (this.separator != null) {
+        finalSeparator += this.separator;
+      }
+      if (this.lineBreak) {
+        finalSeparator += "\n";
+      }
+
+      final StringJoiner dependencyJoiner = new StringJoiner(finalSeparator);
 
       for (Artifact artifact : artifacts) {
         String dependencyAsString = applyArtifactTemplate(artifact, artifactTemplate);
