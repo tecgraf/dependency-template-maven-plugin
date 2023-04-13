@@ -1,3 +1,8 @@
+# 1.2.0
+
+* New property
+  * `useBaseVersion`: Whether to use the artifact base version.
+
 # 1.1.0
 
 * New property

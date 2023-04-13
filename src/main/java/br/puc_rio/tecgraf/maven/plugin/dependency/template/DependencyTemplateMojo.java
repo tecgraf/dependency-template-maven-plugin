@@ -43,6 +43,11 @@ public class DependencyTemplateMojo extends AbstractMojo {
   @Parameter protected String artifactTemplateFile;
 
   /**
+   * Whether to use the artifact base version.
+   */
+  @Parameter(defaultValue = "true") protected Boolean useBaseVersion;
+
+  /**
    * Whether to exclude transitive dependencies.
    */
   @Parameter(defaultValue = "false") protected Boolean excludeTransitive;
@@ -183,7 +188,12 @@ public class DependencyTemplateMojo extends AbstractMojo {
 
     str = str.replace("{{groupId}}", artifact.getGroupId());
     str = str.replace("{{artifactId}}", artifact.getArtifactId());
-    str = str.replace("{{version}}", artifact.getVersion());
+    if (useBaseVersion) {
+      str = str.replace("{{version}}", artifact.getBaseVersion());
+    }
+    else {
+      str = str.replace("{{version}}", artifact.getVersion());
+    }
     str = str.replace("{{type}}", artifact.getType());
     str = str.replace("{{scope}}", artifact.getScope());
 

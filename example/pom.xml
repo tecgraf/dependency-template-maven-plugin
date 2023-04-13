@@ -18,7 +18,7 @@
             <plugin>
                 <groupId>br.puc-rio.tecgraf</groupId>
                 <artifactId>dependency-template-maven-plugin</artifactId>
-                <version>1.0.1</version>
+                <version>1.2.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -28,6 +28,7 @@
                             <mainTemplateFile>src/main/resources/templates/mainTemplate.txt</mainTemplateFile>
                             <artifactTemplateFile>src/main/resources/templates/artifactTemplate.txt</artifactTemplateFile>
                             <separator>,</separator>
+                            <lineBreak>false</lineBreak>
                             <outputFile>target/output.txt</outputFile>
                         </configuration>
                     </execution>
